@@ -1,41 +1,36 @@
-# LAPSE: Luminex Analyses Personalized Environment
+# MOXIE-VASA: Video Analysis for Stress Assessment
 
-**An AI-Agentic Workflow for Automated, Statistically Rigorous Luminex Data Analysis.**
+**A Multimodal, Hardware-Agnostic Fusion Engine for Automated Stress Quantification.**
 
 ---
 
-## 🧬 What is LAPSE?
-LAPSE is a specialized bioinformatics tool designed to automate the analysis of **Luminex (multiplex immunoassay)** data. Unlike standard tools that simply plot data, LAPSE acts as an intelligent **AI Research Assistant**.
+## 🧬 What is VASA?
+MOXIE-VASA is a specialized bioinformatics pipeline designed to automate the ingestion, processing, and analysis of multimodal human stress data. It serves as the "Ingestion & Fusion Layer" for the broader MOXIE project.
 
-As the development in AI continues, the future in research would be Organization powers AI tool. LAPSE begins with that thought, It uses a **Private AI Agent** (powered by UMich GPT) to guide researchers through complex statistical decisions—such as handling censored data, quality control, and differential expression analysis—ensuring reproducible and statistically valid results.
+Unlike standard tools that analyze a single data stream (e.g., just heart rate or just facial expressions), VASA integrates Video-derived Physiological Signals (rPPG) with Clinical Wearable Data (ECG, EDA, Respiration) to generate a robust, unified "Stress Score."
+
+As the development in AI continues, the future in research would be Organization powers AI tool. VASA begins with that thought, It uses a **Private AI Agent** (powered by UMich GPT) to guide researchers through complex decisions—such as handling multimodal data.
 
 ## 🛑 The Problem
-Current workflows for analyzing Luminex cytokine data are flawed:
-1.  **Ignored pre-processing:** Data preprocessing is important for correct analyses. Sometimes we often replace values "Below Detection Limit" with `0`, leading to biased results. It requires constant checking of the data to see if it is fit for further analyses.
-2.  **Manual Error:** Quality Control (checking bead counts, CV%) is tedious and often skipped.
-3.  **Privacy Risks:** Public AI tools cannot be used for sensitive patient data (PHI).
-4.  **Static Tools:** Existing software provides rigid outputs without taking in user wants and needs into consideration. Differnt research will involve different analyses type and therefore explaining *why* a result is significant.
+Current workflows for stress research are fragmented and inefficient:
+1.  **Data Silos:**Facial expression data (Action Units) and physiological data (ECG) are processed in separate software, making temporal alignment difficult.
+2.  **Manual Labor:** Researchers must manually convert proprietary file formats (e.g., .acq, .fit, .csv) before analysis.
+3.  **Proprietary Black Boxes:** Commercial tools (e.g., FaceReader, iMotions) are closed-source, Windows-only, and cannot run on High-Performance Computing (HPC) clusters like U-M Great Lakes.
 
-## 💡 The LAPSE Solution
-LAPSE solves these issues by integrating **Agentic AI** with **Rigorous Biostatistics**:
-* **Smart Censoring:** Automatically detects Left-Censored data and suggests **Tobit Regression** or **MLE** instead of simple substitution.
-* **Automated QC:** Acts as a guard flagging samples with low bead counts (<35) or high Coefficient of Variation (>20%).
-* **Privacy-First:** Built to run with University-hosted AI (e.g., UMich GPT), keeping patient data within the secure firewall.
-* **Contextual Analysis:** Uses *Limma-style* linear modeling for differential expression, adjusted for covariates (e.g., "Day -4 vs Day 0"), it asks what the user wants and chooses accordingly.
+## 💡 The VASA Solution
+MOXIE-VASA solves these issues by creating a single Automated Pipeline:
+* **Universal Ingestion:** Automatically detects and routes file types (.mp4, .acq, .csv, .txt) to specific processing workers.
 
 ## 📂 Inputs & Outputs
 
 ### **Input**
-* **Data File:** Standardized CSV/Excel file containing Luminex raw data.
-* **Metadata:** Experimental design info (e.g., Timepoints, Treatment Groups).
+The tool accepts a heterogeneous mix of file formats:
+* **Video:** .mp4 / .avi (Face & rPPG extraction).
 
-### **Output**
-An interactive **HTML Analysis Report** containing:
-1.  **QC Summary:** Table of flagged/excluded samples.
-2.  **Differential Expression:**
-    * **Volcano Plots:** Visualizing fold change vs. significance.
-    * **Heatmaps:** Clustered cytokine profiles.
-    * **Statistical Tables:** Top hits ranked by **FDR-adjusted p-values**.
+### **Output (The Report)**
+A consolidated Analysis Package for each subject:
+1.  **features_merged.csv: Time-aligned dataset containing Facial AUs, Heart Rate (rPPG + Sensor** 
+2.  **stress_verdict.csv: The Machine Learning prediction of stress levels (Low/Medium/High) over time.**
 
 ---
 *Developed for the automation of high-throughput immunology data analysis.*
