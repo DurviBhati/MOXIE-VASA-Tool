@@ -7,7 +7,9 @@
 ## 🧬 What is VASA?
 MOXIE-VASA is a specialized bioinformatics pipeline designed to automate the input, processing, and analysis of multimodal human wearable data. It serves as the preprocessing and feature selection (extension to ML/DL and final stress report generation) for the broader MOXIE project.
 
-Unlike standard tools that analyze a single data stream (e.g., just heart rate or just facial expressions), VASA integrates Video-derived Physiological Signals (rPPG) with the complete Video analyses to generate a robust, unified "Stress Report." As the development in AI continues, the future in research would be Organization powers AI tool. VASA begins with that thought, It uses a **Private AI Agent** (powered by UMich GPT) to guide researchers through complex decisions—such as handling multimodal data.
+Unlike standard tools that analyze a single data stream (e.g., just heart rate or just facial expressions), VASA integrates Video-derived Physiological Signals (rPPG) with the complete Video analyses to generate a robust, unified "Stress Report." 
+
+As the development in AI continues, the future in research would be Organization powers AI tool. VASA begins with that thought, It will use a **Private AI Agent** (powered by UMich GPT) to guide researchers through complex decisions and handling multimodal data.
 
 ## 🛑 The Problem
 Current workflows for stress research are fragmented:
