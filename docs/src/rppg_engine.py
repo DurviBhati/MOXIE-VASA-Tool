@@ -11,7 +11,7 @@ import scipy.signal
 sys.modules['cupy']=np
 sys.modules['cusignal']= scipy.signal
 
-from pyVHR.pipeline.pipeline import Pipeline
+from pyVHR.analysis.pipeline import Pipeline
 
 def run_pyvhr_extraction(video_path, output_folder):
     """
