@@ -3,8 +3,8 @@ import subprocess
 
 def run_openface_feature_extraction(video_path, output_dir):
     """
-    This function will run the OpenFace FeatureExtraction tool via Docker on a single video.
-    
+    This function will run the OpenFace FeatureExtraction tool via Docker on a video.
+    This is automatically grabs the correct filename from whatever the dispatcher sends.
     Arguments:
         video_path (str): The full path to the input video file.
         output_dir (str): The full path where results should be saved.
@@ -16,13 +16,8 @@ def run_openface_feature_extraction(video_path, output_dir):
     #---------------------------------------------------------
     # Setting up docker paths
     #---------------------------------------------------------
-    # Docker cannot see the C: drive directly.
-    # So we "mount" the folder containing the video into the container.
-    
-    # Defining the folder containing the video 
-    video_folder = os.path.dirname("/mnt/c/Users/durvi/University of Michigan Dropbox/Durvi Bhati/moxie_vas_tool/input/WIN_20260131_19_56_23_Pro.mp4")
     # Geting the filename 
-    video_filename = os.path.basename("WIN_20260131_19_56_23_Pro.mp4")
+    video_filename = os.path.basename(video_path)
     
     print(f"[VideoEngine] Preparing to process: {video_filename}")
     
@@ -33,7 +28,7 @@ def run_openface_feature_extraction(video_path, output_dir):
     # For the command to run I will have to provide a single string instructions.
     docker_internal_command = (
         f"cd /home/openface-build/build/bin && "
-        f"./FeatureExtraction -f '/in/{video_filename}' -out_dir '/out' -au_static -pose -gaze"
+        f"./FeatureExtraction -f '/in/{video_filename}' -out_dir '/out' -aus -pose -gaze"
     )    
     command = [
         "docker", "run", "--rm", # --rm means "delete container when done" "--platform", 
