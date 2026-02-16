@@ -12,12 +12,12 @@ The purpose of the MOXIE-VASA toll is to provide an automates, non invasive meth
 ### 1.2 Scope
 The tool acts as the primary video processing module for the larger MOXIE stress assessment framework.
 * **Current Phase:** Takes input in the form of video files, extracts facial features via OpenFace, computes the heart rate via pyVHR,
-* **Future face ** I am planning to integrate the external wearable data later once the initial pipeline is successful.
+* **Future face ** The tool will later integrate the external wearable data later once the initial pipeline is successful.
 
 ## 2. User Requirements 
 * **01 Automated Ingestion:** Person uploads a folder of subject videos ('.mp4') to the tool on cluster; the system automatically queues them for processing without manual intervention. 
 * **02 Feature Extraction:** The tool extracts frame-by-frame intensities for stress-related Action Units.
-* **03 Physiological Estimation:** The tool estimates heart rate from the same video feed using rPPG algorithms, robust to minor head motions.
+* **03 Physiological Estimation:** The tool estimates heart rate from the same video feed using rPPG algorithms, robust to head motions.
 * **04 Data Export:** The user recieves a simplified CSV report containing time-aligned facial and heart rate data for stress assessment.
 
 ## 3. Functional Requirements
