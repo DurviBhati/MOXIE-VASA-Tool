@@ -1,0 +1,53 @@
+[project]
+name = "moxie"
+version = "0.1.0"
+description = "A modern, modular pipeline for rPPG, OpenFace, and OpenPose analysis."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "opencv-python",
+    "mediapipe>=0.10.0",
+    "scipy"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# ==========================================
+# RUFF CONFIGURATION (The Grammar & Style Police)
+# ==========================================
+[tool.ruff]
+# Set the maximum line length to 88 (Standard Black formatting)
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+# E: pycodestyle errors (spacing, formatting)
+# F: Pyflakes (unused variables, undefined names)
+# I: isort (automatically sorts your import statements alphabetically)
+# B: flake8-bugbear (finds common bugs and design problems)
+select = ["E", "F", "I", "B"]
+
+# Ignore line length rules in tests or docs if needed
+ignore = []
+
+# ==========================================
+# MYPY CONFIGURATION (The Type Safety Net)
+# ==========================================
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+# Computer Vision libraries often lack perfect type hints.
+# This tells MyPy not to panic if it can't find types for cv2 or mediapipe.
+[[tool.mypy.overrides]]
+module = [
+    "cv2.*",
+    "mediapipe.*",
+    "scipy.*"
+]
+ignore_missing_imports = true

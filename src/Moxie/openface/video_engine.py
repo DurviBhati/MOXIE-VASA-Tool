@@ -18,27 +18,34 @@ def run_openface_feature_extraction(video_path, output_dir):
     #---------------------------------------------------------
     # Geting the filename 
     video_filename = os.path.basename(video_path)
+    ## Extracting the folder path from the full video path 
+    video_folder = os.path.dirname(video_path)
     
     print(f"[VideoEngine] Preparing to process: {video_filename}")
     
     #---------------------------------------------------------
     # Designing the command 
     #---------------------------------------------------------
+    # Use os.path.abspath to make sure Docker doesn't get confused by relative paths
+    abs_input = os.path.abspath(video_folder)
+    abs_output = os.path.abspath(output_dir)
     # This will used to give instruction to dockeer.
     # For the command to run I will have to provide a single string instructions.
     docker_internal_command = (
         f"cd /home/openface-build/build/bin && "
-        f"./FeatureExtraction -f '/in/{video_filename}' -out_dir '/out' -aus -pose -gaze"
+        f"./FeatureExtraction -f '/in/{video_filename}' -out_dir '/out' " 
+        f"-aus -pose -gaze -2Dfp -3Dfp -simalign"
     )    
     command = [
         "docker", "run", "--rm", # --rm means "delete container when done" "--platform", 
-        "--platform","linux/amd64", #This is done to specify the processing mechanism(though not a concern for my processor but just as a safety net) "-v", 
-        "--entrypoint", "/bin/bash", # This is added to force the output of bash         
-        "-v", f"{video_folder}:/in", # Map the local video folder -> INSIDE /in 
-        "-v", f"{output_dir}:/out",  # Map the local folder   --> Ouput/in
+        "--platform","linux/amd64", #This is done to specify the processing mechanism(though not a concern for my processor but just as a safety net) "-v",    
+        "--entrypoint", "/home/openface-build/build/bin/FeatureExtraction", # Full path to the tool
+        "-v", f"{abs_input}:/in", # Map the local video folder -> INSIDE /in 
+        "-v", f"{abs_output}:/out",  # Map the local folder   --> Ouput/in
         "algebr/openface:latest", # The tool to use
-        "-c", ## This will imstruct docker to used the next command as shell.
-        docker_internal_command
+        "-f", f"/in/{video_filename}", 
+        "-out_dir", "/out",
+        "-aus", "-pose", "-gaze", "-2Dfp", "-3Dfp", "-simalign"
     ]
     
     #---------------------------------------------------------
