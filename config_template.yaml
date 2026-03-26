@@ -1,0 +1,81 @@
+# ============================================================
+# MOXIE-VASA  —  Configuration Template
+# ============================================================
+# This file contains no real paths.
+#
+# Setup instructions
+# ------------------
+#   1. Copy this file:   cp config.template.yaml config.yaml
+#   2. Edit config.yaml: set data_root to your local moxie_data folder
+#
+# Recommended data_root location
+# --------------------------------
+# Place moxie_data/ BESIDE the project repo, not inside
+# ============================================================
+
+paths:
+  # !! CHANGE THIS to your local moxie_data folder !!
+  data_root: "/path/to/your/moxie_data"
+
+  # These are built automatically from data_root — no need to change them
+  personal_videos:  "${data_root}/personal"
+  ubfc_root:        "${data_root}/ubfc_phys"
+  ubfc_raw:         "${data_root}/ubfc_phys/raw"
+  ubfc_gt:          "${data_root}/ubfc_phys/ground_truth"
+  cohface_root:     "${data_root}/cohface"
+
+  # Pipeline outputs — relative to project root, created automatically
+  output_root:      "Pipeline_Output"
+  openface_output:  "Pipeline_Output/result_openface"
+  rppg_output:      "Pipeline_Output/result_rppg"
+  openpose_output:  "Pipeline_Output/result_openpose"
+  features_output:  "Pipeline_Output/features"
+
+# ---------------------------------------------------------------
+# UBFC-Phys dataset
+# ---------------------------------------------------------------
+ubfc_phys:
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+  conditions:
+    T1: "rest"
+    T3: "stress"
+  base_url: "https://zenodo.org/record/4063016/files"
+  keep_raw_video: false
+  min_duration_seconds: 30
+
+# ---------------------------------------------------------------
+# rPPG settings
+# ---------------------------------------------------------------
+rppg:
+  fps: 30
+  window_seconds: 30
+  step_seconds: 10
+  bandpass_low: 0.7
+  bandpass_high: 3.0
+  roi_type: "cheek"
+
+# ---------------------------------------------------------------
+# OpenFace settings
+# ---------------------------------------------------------------
+openface:
+  docker_image: "algebr/openface:latest"
+  au_columns:
+    - "AU01"
+    - "AU02"
+    - "AU04"
+    - "AU05"
+    - "AU06"
+    - "AU07"
+    - "AU09"
+    - "AU10"
+    - "AU12"
+    - "AU14"
+    - "AU15"
+    - "AU17"
+    - "AU20"
+    - "AU23"
+    - "AU25"
+    - "AU26"
+    - "AU45"
+  pose_columns: ["pose_Rx", "pose_Ry", "pose_Rz", "pose_Tx", "pose_Ty", "pose_Tz"]
+  gaze_columns: ["gaze_angle_x", "gaze_angle_y"]

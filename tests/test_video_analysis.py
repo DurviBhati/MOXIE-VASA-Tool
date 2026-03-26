@@ -6,21 +6,22 @@ import pandas as pd
 
 # --- PATH SETUP ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
-src_dir = os.path.abspath(os.path.join(current_dir, "..", "docs", "src")) 
+src_dir = os.path.abspath(os.path.join(current_dir, "..", "src", "moxie")) 
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
-from video_engine import run_openface_feature_extraction
+from src.Moxie.openface.video_engine import run_openface_feature_extraction
 
 class TestVideoAnalysisReal(unittest.TestCase):
     
     def setUp(self):
         """Creates a clean output folder for each test."""
-        self.test_dir = tempfile.TemporaryDirectory()
+        # ignore_cleanup_errors=True stops the test from crashing if Docker locks the files
+        self.test_dir = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.output_folder = self.test_dir.name
         
         # Point dynamically to the input folder
-        self.input_folder = os.path.abspath(os.path.join(current_dir, "..", "input"))
+        self.input_folder = "/mnt/c/Users/durvi/University of Michigan Dropbox/Durvi Bhati/moxie_vas_tool/input"
 
     def tearDown(self):
         """Cleans up the temporary output folder after the test is done."""
@@ -65,7 +66,7 @@ class TestVideoAnalysisReal(unittest.TestCase):
                 video_path = os.path.join(self.input_folder, video_name)
                 
                 #Run OpenFace Analysis
-                result = run_video_analysis(video_path, self.output_folder)
+                result = run_openface_feature_extraction(video_path, self.output_folder)
                 self.assertTrue(result, f"Video analysis failed on {video_name}")
                 
                 #Verification
