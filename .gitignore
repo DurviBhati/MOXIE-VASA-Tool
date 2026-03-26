@@ -38,7 +38,6 @@ htmlcov/
 
 # ── Jupyter (for any exploratory notebooks) ───────────────────────────────────
 .ipynb_checkpoints/
-*.ipynb
 
 # ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
