@@ -1,6 +1,5 @@
 # ── Local config (contains your absolute paths — NEVER commit this) ──────────
 config.yaml
-data_ingestion.py
 
 # ── Pipeline outputs (large, regeneratable) ───────────────────────────────────
 Pipeline_Output/
