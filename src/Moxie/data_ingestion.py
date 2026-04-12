@@ -8,10 +8,6 @@ Responsibilities
    regardless of source:
      - Personal videos  (absolute paths from config)
      - UBFC-rPPG        (download-and-purge via gdown, rPPG validation)
-     - UBFC-Phys        (future — AWS S3 via IEEE DataPort credentials)
-     - COHFACE          (future — API access)
-3. Download individual UBFC-rPPG videos on demand, yield the VideoJob,
-   then delete the raw .avi to keep disk usage low (~600 MB peak per video)
 
 Public interface (what dispatcher.py calls)
 -------------------------------------------
@@ -49,7 +45,7 @@ import yaml
 
 
 # ──────────────────────────────────────────────────────────────
-# 1.  Config loader
+#   Config loader
 # ──────────────────────────────────────────────────────────────
 
 def load_config(config_path=None) -> dict:
@@ -109,7 +105,7 @@ def _ensure_output_dirs(cfg: dict) -> None:
 
 
 # ──────────────────────────────────────────────────────────────
-# 2.  VideoJob  —  the contract between ingestion and dispatcher
+#   VideoJob  —  the contract between ingestion and dispatcher
 # ──────────────────────────────────────────────────────────────
 
 @dataclass
@@ -158,7 +154,7 @@ class VideoJob:
 
 
 # ──────────────────────────────────────────────────────────────
-# 3.  Personal video iterator
+#  Personal video iterator
 # ──────────────────────────────────────────────────────────────
 
 VALID_EXTENSIONS = (".mp4", ".avi", ".mov", ".mkv")
@@ -212,7 +208,7 @@ def iter_personal_videos(cfg: dict) -> Generator[VideoJob, None, None]:
 
 
 # ──────────────────────────────────────────────────────────────
-# 4.  UBFC-rPPG iterator  (download → yield → purge)
+#   UBFC-rPPG iterator  (download → yield → purge)
 # ──────────────────────────────────────────────────────────────
 
 def iter_ubfc_rppg(cfg: dict) -> Generator[VideoJob, None, None]:
@@ -324,7 +320,7 @@ def iter_ubfc_rppg(cfg: dict) -> Generator[VideoJob, None, None]:
 
 
 # ──────────────────────────────────────────────────────────────
-# 5.  UBFC-Phys iterator  (future — AWS S3 via IEEE DataPort)
+#   UBFC-Phys iterator  (future — AWS S3 via IEEE DataPort)
 # ──────────────────────────────────────────────────────────────
 
 def iter_ubfc_phys(cfg: dict) -> Generator[VideoJob, None, None]:
@@ -351,7 +347,7 @@ def iter_ubfc_phys(cfg: dict) -> Generator[VideoJob, None, None]:
 
 
 # ──────────────────────────────────────────────────────────────
-# 6.  COHFACE iterator  (future — API access)
+#   COHFACE iterator  (future — API access)
 # ──────────────────────────────────────────────────────────────
 
 def iter_cohface(cfg: dict) -> Generator[VideoJob, None, None]:
@@ -365,7 +361,7 @@ def iter_cohface(cfg: dict) -> Generator[VideoJob, None, None]:
 
 
 # ──────────────────────────────────────────────────────────────
-# 7.  gdown helper
+#   gdown helper
 # ──────────────────────────────────────────────────────────────
 
 def _gdown_file(

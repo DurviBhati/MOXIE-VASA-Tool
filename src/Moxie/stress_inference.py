@@ -158,6 +158,7 @@ def compute_stress_score(features: dict) -> dict:
         "hr_mean":     features.get("hr_mean"),
         "au04_mean":   features.get("au04_mean"),
         "au07_mean":   features.get("au07_mean"),
+        "au14_mean":   features.get("au14_mean"),
         "au15_mean":   features.get("au15_mean"),
         "au23_mean":   features.get("au23_mean"),
         "rmssd":       features.get("rmssd"),

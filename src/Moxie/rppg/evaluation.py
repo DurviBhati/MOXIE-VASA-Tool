@@ -1,7 +1,7 @@
 """
 rppg/evaluation.py  —  rPPG Validation Against Ground Truth
 ============================================================
-Used when a ground-truth BVP signal is available (UBFC-Phys).
+Used when a ground-truth BVP signal is available (UBFC-rPPG).
 Computes standard rPPG validation metrics:
 
   MAE    Mean Absolute Error between estimated and reference HR (bpm)
@@ -37,7 +37,7 @@ def evaluate_rppg(
     fps:                float,
 ) -> dict:
     """
-    Compare estimated rPPG output against UBFC-Phys ground truth.
+    Compare estimated rPPG output against UBFC-rPPG ground truth.
 
     Parameters
     ----------
@@ -89,9 +89,9 @@ def evaluate_rppg(
 
 def _load_ubfc_bvp(csv_path: str) -> tuple[np.ndarray, float]:
     """
-    Load UBFC-Phys BVP ground truth CSV.
+    Load UBFC BVP ground truth CSV.
 
-    UBFC-Phys BVP files have two columns: the BVP signal and
+    UBFC BVP files have two columns: the BVP signal and
     the sampling rate (64 Hz for the Empatica E4 wristband).
     """
     path = Path(csv_path)
