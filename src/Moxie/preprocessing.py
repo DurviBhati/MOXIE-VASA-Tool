@@ -1,10 +1,6 @@
 """
 preprocessing.py  —  MOXIE-VASA Shared Preprocessing Module
 =============================================================
-Project : MOXIE-VASA  (Multimodal Video-Based Stress Assessment)
-Author  : Durvi Bhati 
-Version : 0.3
-
 Overview
 --------
 Shared preprocessing that runs on every video before it reaches

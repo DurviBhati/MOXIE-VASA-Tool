@@ -3,7 +3,6 @@ dispatcher.py  —  MOXIE-VASA Pipeline Orchestrator
 ====================================================
 Project : MOXIE-VASA  (Multimodal Video-Based Stress Assessment)
 Author  : Durvi Bhati 
-Version : 0.5  (personal-video mode — Phase 1)
 
 Overview
 --------

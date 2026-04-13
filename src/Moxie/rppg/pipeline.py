@@ -1,10 +1,6 @@
 """
 rppg/pipeline.py  —  MOXIE-VASA rPPG Pipeline Orchestrator
 ============================================================
-Project : MOXIE-VASA  (Multimodal Video-Based Stress Assessment)
-Author  : Durvi Bhati — University of Michigan
-Version : 1.0
-
 Overview
 --------
 Orchestrates the full rPPG processing chain for a single video:

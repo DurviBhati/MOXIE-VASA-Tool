@@ -1,10 +1,6 @@
 """
 openface/video_engine.py  —  MOXIE-VASA OpenFace Module
 =========================================================
-Project : MOXIE-VASA  (Multimodal Video-Based Stress Assessment)
-Author  : Durvi Bhati 
-Version : 0.3
-
 Overview
 --------
 Wraps the OpenFace FeatureExtraction tool running inside a Docker
