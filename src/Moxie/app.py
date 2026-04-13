@@ -270,7 +270,6 @@ def process_one(
                 processed_video, str(RPPG_DIR),
                 ground_truth_bvp=gt_bvp_path,
                 fps=fps,
-                gt_format="ubfc_rppg",
             )
             log(f"  rPPG: {'done' if rppg_ok else 'FAILED'}")
             if rppg_ok:
