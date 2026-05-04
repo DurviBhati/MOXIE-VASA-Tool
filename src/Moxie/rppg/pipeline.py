@@ -51,6 +51,7 @@ from .filtering      import detrend_signal, bandpass_filter
 from .pos_algorithm  import apply_pos
 from .hr_estimation  import estimate_hr_features
 from .evaluation     import evaluate_rppg
+from .signal_quality import filter_bvp_by_quality
 
 
 # Processing resolution — resize frames to this before ROI extraction
@@ -144,6 +145,15 @@ def run_rppg_analysis(
         # ── Step 7: POS algorithm ─────────────────────────────────────────────
         print("[rPPG] Applying POS algorithm...")
         bvp = apply_pos(filtered, fps=fps)
+        # SQI filtering — reject noisy windows before HR estimation
+        bvp_filtered, quality_mask, sqi_report = filter_bvp_by_quality(
+            bvp, fps=fps, window_sec=30.0, step_sec=10.0, threshold=0.3
+            )
+        print(f"[rPPG] SQI: {sqi_report['n_good']}/{sqi_report['n_windows']} "
+        f"windows passed (mean SQI={sqi_report['mean_sqi']:.3f})")
+
+        # Use filtered BVP for HR estimation
+        hr_features = estimate_hr_features(bvp_filtered, fps)
         print(f"[rPPG] BVP waveform shape: {bvp.shape}")
 
         # ── Step 8: HR and HRV feature extraction ─────────────────────────────
@@ -184,6 +194,7 @@ def run_rppg_analysis(
             hr_features  = hr_features,
             validation   = validation,
             fps          = fps,
+            sqi_report   =sqi_report,
         )
 
         print(f"[rPPG] Done — outputs written to {output_dir}")
@@ -255,6 +266,7 @@ def _save_outputs(
     hr_features: dict,
     validation:  dict,
     fps:         float,
+    sqi_report:  None,
 ) -> None:
     """Write BVP CSV, RGB CSV, and metrics JSON to output_dir."""
 
@@ -279,11 +291,19 @@ def _save_outputs(
 
     # Metrics JSON
     metrics = {
-        "video":      video_stem,
-        "fps":        round(fps, 4),
-        "hr":         hr_features,
-        "validation": validation if validation else "not_run",
+    "video":      video_stem,
+    "fps":        round(fps, 4),
+    "hr":         hr_features,
+    "validation": validation if validation else "not_run",
     }
+    if sqi_report is not None:
+        metrics["sqi"] = {
+            "n_windows":  sqi_report["n_windows"],
+            "n_good":     sqi_report["n_good"],
+            "n_rejected": sqi_report["n_rejected"],
+            "pct_good":   sqi_report["pct_good"],
+            "mean_sqi":   sqi_report["mean_sqi"],
+            }
     metrics_path = output_dir / f"{video_stem}_metrics.json"
     with open(metrics_path, "w") as fh:
         json.dump(metrics, fh, indent=2, default=str)

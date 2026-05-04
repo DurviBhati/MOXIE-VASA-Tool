@@ -35,6 +35,7 @@ def evaluate_rppg(
     estimated_bvp:      np.ndarray,
     gt_bvp_csv_path:    str,
     fps:                float,
+    gt_format:          str = "ubfc_rppg",
 ) -> dict:
     """
     Compare estimated rPPG output against UBFC-rPPG ground truth.
@@ -60,14 +61,22 @@ def evaluate_rppg(
         "bvp_pearson_r":  None,
         "bvp_pearson_p":  None,
         "error":          None,
+        "gt_format":      gt_format,
     }
 
     try:
-        gt_bvp, gt_fps = _load_ubfc_bvp(gt_bvp_csv_path)
-        gt_hr_bpm      = _hr_from_bvp(gt_bvp, gt_fps)
+        if gt_format == "ubfc_rppg":
+            lines = Path(gt_bvp_csv_path).read_text().strip().split('\n')
+            # Row 0 = BVP, Row 1 = HR per frame, Row 2 = timestamps
+            gt_bvp = np.array([float(v) for v in lines[0].split()], dtype=np.float64)
+            hr_values = [float(v) for v in lines[1].split()]
+            gt_hr_bpm = float(np.mean(hr_values))
+        else:
+            gt_bvp, gt_fps = _load_ubfc_bvp(gt_bvp_csv_path, gt_format=gt_format)
+            gt_hr_bpm = _hr_from_bvp(gt_bvp, gt_fps)
 
         result["gt_hr_bpm"] = round(float(gt_hr_bpm), 2)
-        result["hr_mae"]    = round(abs(estimated_hr_bpm - gt_hr_bpm), 2)
+        result["hr_mae"] = round(abs(estimated_hr_bpm - gt_hr_bpm), 2)
         result["hr_rmse"]   = round(
             float(np.sqrt((estimated_hr_bpm - gt_hr_bpm) ** 2)), 2
         )
@@ -87,29 +96,39 @@ def evaluate_rppg(
     return result
 
 
-def _load_ubfc_bvp(csv_path: str) -> tuple[np.ndarray, float]:
+def _load_ubfc_bvp(csv_path: str, gt_format: str = "ubfc_rppg") -> tuple[np.ndarray, float]:
     """
-    Load UBFC BVP ground truth CSV.
+    Load UBFC BVP ground truth.
 
-    UBFC BVP files have two columns: the BVP signal and
-    the sampling rate (64 Hz for the Empatica E4 wristband).
+    Supports two formats:
+      - "ubfc_rppg":  ground_truth.txt with space-separated float values
+                      (one long row or multiple rows of space-separated values).
+                      Sampling rate = same as video fps (passed externally).
+      - "ubfc_phys":  CSV with two columns [bvp_value, sampling_rate].
     """
     path = Path(csv_path)
     if not path.exists():
         raise FileNotFoundError(f"Ground truth BVP not found: {csv_path}")
 
-    df = pd.read_csv(csv_path, header=None)
+    if gt_format == "ubfc_rppg":
+        lines = path.read_text().strip().split('\n')
+        # Row 0 = BVP waveform, Row 1 = HR per frame, Row 2 = timestamps
+        hr_values = [float(v) for v in lines[1].split()]
+        gt_hr = np.mean(hr_values)
+        # Return BVP from row 0 for waveform correlation, HR directly
+        bvp = np.array([float(v) for v in lines[0].split()], dtype=np.float64)
+        return bvp, fps, gt_hr  # return HR directly, skip _hr_from_bvp
 
-    if df.shape[1] == 2:
-        # Format: [bvp_value, sampling_rate]
-        bvp = df.iloc[:, 0].values.astype(float)
-        gt_fps = float(df.iloc[0, 1])
     else:
-        # Fallback: single column, assume 64 Hz (Empatica E4 default)
-        bvp = df.iloc[:, 0].values.astype(float)
-        gt_fps = 64.0
-
-    return bvp, gt_fps
+        # UBFC-Phys CSV format: [bvp_value, sampling_rate]
+        df = pd.read_csv(csv_path, header=None)
+        if df.shape[1] == 2:
+            bvp = df.iloc[:, 0].values.astype(float)
+            gt_fps = float(df.iloc[0, 1])
+        else:
+            bvp = df.iloc[:, 0].values.astype(float)
+            gt_fps = 64.0
+        return bvp, gt_fps
 
 
 def _hr_from_bvp(bvp: np.ndarray, fps: float) -> float:
